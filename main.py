@@ -4,9 +4,8 @@ from PIL import Image
 from Commands import *
 
 def main():
-    login = input("Login: ")
+    login = input("Login: ") #TODO: automatic login
     password = input("Password: ")
-
     client = Login_User(login, password)
 
     print('Client Connected')
@@ -22,7 +21,7 @@ def main():
             img = Image.open(post_path)
             # Display the image
             img.show()
-            Post(client, post_path, specific_caption)
+            Post(post_path, client, specific_caption)
             print('photo uploaded')
             exit()
     return None

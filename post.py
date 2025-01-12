@@ -13,7 +13,7 @@ def Specific_post(client, image_name, specific_caption):
     images = os.listdir(path)
     if image_name in images:
         print('photo found')
-        image_path = os.path.join(images, image_name)
+        image_path = os.path.join(path, image_name)
     else:
         print('photo not found')
         image_path = 'image not found'
@@ -22,14 +22,13 @@ def Specific_post(client, image_name, specific_caption):
 def Random_post(client):
     images = os.listdir(path)
     index = random.randint(0, len(images)-1)
-    image_path = os.path.join(images, images[index])
-    Post(client, image_path)
-    return images[index]
+    image_path = os.path.join(path, images[index])
+    return image_path
 
 def Post(image_path, client, specific_caption = ''):
     caption = Caption_generation(image_path, specific_caption)
     client.photo_upload(path=image_path, caption=caption)
-    os.remove(image_path)
+    os.remove(image_path) # TODO: instead of removing puting in database
     print(f"Posted and removed image: {image_path}")
 
 def Get(image_name):
