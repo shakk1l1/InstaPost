@@ -4,6 +4,9 @@ from PIL import Image
 from Commands import *
 
 def main():
+    """
+    Main function to handle user login, command execution, and posting images.
+    """
     login = input("Login: ") #TODO: automatic login
     password = input("Password: ")
     client = Login_User(login, password)

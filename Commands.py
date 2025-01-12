@@ -3,7 +3,19 @@ from os.path import commonpath
 from post import *
 
 def Command(client):
-    command = input("Command: ")
+    """
+    Handle user commands and return the image path and caption.
+
+    :param client: Client access
+    :return: Tuple containing the image path and caption
+    """
+    f = open("path.py", "r")
+    if f.read() == "path = ''":
+        print("Path to folder not specified.")
+        print("please specify the folder path using: path -> new.")
+    f.close()
+
+    command = input(">> ")
 
     match command:
         case 'help':
@@ -14,8 +26,6 @@ def Command(client):
             print('path: path settings')
             print('get: get specific post and preview')
             Command(client)
-            specific_caption = ''
-            post = ''
         case "exit":
             exit()
         case "random":
@@ -28,36 +38,48 @@ def Command(client):
         case "path":
             Commandpath()
             Command(client)
-            specific_caption = ''
-            post = ''
         case "get":
             image_name = input("image name:")
             specific_caption = ''
             post, caption = Get(image_name)
+        case _:
+            print("unknown command")
+            print("use help for commands list")
+            Command(client)
     return post, specific_caption
 
 
 def Commandpath():
-    c_p = input('Command-path: ')
+    """
+    Handle path-related commands for setting and displaying the folder path.
+    """
+    c_p = input('>> -path ')
     match c_p:
         case 'help':
             print("List of commands")
             print('exit: quit')
             print('esc: escape')
-            print('path: show existing path')
+            print('show: show existing path')
             print('new: create new path')
             Commandpath()
         case "exit":
             exit()
         case "esc":
             return None
-        case "path":
+        case "show":
             f = open("path.py", "r")
             print(f.read())
             f.close()
+            Commandpath()
         case "new":
             new_path = input('new path:')
             with open('path.py', 'w') as f:
                 f.write('path = ' + "'" + new_path + "'")
+            print("Path saved!")
+            Commandpath()
+        case _:
+            print("unknown command")
+            print("use help for commands list")
+            Commandpath()
 
     return None

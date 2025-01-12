@@ -1,6 +1,13 @@
 from PIL import Image, ExifTags
 
 def Get_Metadata(image_path):
+    """
+    Generate a caption for an image using its metadata and a specific caption.
+
+    :param image_path: Path to the image
+    :param specific_caption: Specific caption to add
+    :return: Generated caption
+    """
     img = Image.open(image_path)
     exif = {ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS}
     Metadata = input("Put Metadata into the image ? (y/n)")
