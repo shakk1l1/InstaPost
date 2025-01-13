@@ -1,7 +1,7 @@
 from login_user import *
-from post import *
-from PIL import Image
 from Commands import *
+from database import insert_image, check_image
+from PIL import Image
 
 def main():
     """
@@ -10,14 +10,14 @@ def main():
     login = input("Login: ") #TODO: automatic login
     password = input("Password: ")
     client = Login_User(login, password)
-
+    # TODO: days/hours since last post
+    #TODO: UI implementation
     print('Client Connected')
 
     post_path, specific_caption = Command(client)
 
     if post_path == 'image not found':
-        print("Exiting whitout posting...")
-        exit()
+        print("return whitout posting...")
     else:
         if post_path != '':
             # Load an image
@@ -26,7 +26,7 @@ def main():
             img.show()
             Post(post_path, client, specific_caption)
             print('photo uploaded')
-            exit()
     return None
 
-main()
+while True:
+    main()

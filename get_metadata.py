@@ -10,7 +10,7 @@ def Get_Metadata(image_path):
     """
     img = Image.open(image_path)
     exif = {ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS}
-    Metadata = input("Put Metadata into the image ? (y/n)")
+    Metadata = input("Put Metadata into the image ? (y/n) \t")
     if Metadata.lower() == "y":
         GPS = input("Put GPS information ? (y/n) \t")
         if GPS.lower() == "y":
@@ -42,9 +42,9 @@ def Get_Metadata(image_path):
             Camera = '\nCamera: N/A'
 
         if 'LensModel' in exif:
-            Lens = ' || LensModel: ' + str(exif['LensModel'])
+            Lens = ' || Lens: ' + str(exif['LensModel'])
         else:
-            Lens = ' || LensModel: N/A'
+            Lens = ' || Lens: N/A'
 
         if 'DateTimeOriginal' in exif:
             DateTimeOriginal = exif['DateTimeOriginal']
@@ -52,7 +52,7 @@ def Get_Metadata(image_path):
             DateTimeOriginal = 'N/A'
 
         if 'FocalLength' in exif:
-            FocalLength = '\nFocal length: ' +exif['FocalLength']
+            FocalLength = '\nFocal length: ' + str(exif['FocalLength'])
         else:
             FocalLength = '\nFocal length: N/A'
 

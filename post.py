@@ -4,7 +4,7 @@ from path import *
 import random
 from PIL import Image
 
-def Specific_post(client, image_name, specific_caption):
+def Specific_post(image_name):
     """
     Find a specific image by name and return its path.
 
@@ -22,7 +22,7 @@ def Specific_post(client, image_name, specific_caption):
         image_path = 'image not found'
     return image_path
 
-def Random_post(client):
+def Random_post():
     """
     Select a random image from the directory and return its path.
 
@@ -43,6 +43,9 @@ def Post(image_path, client, specific_caption = ''):
     :param specific_caption: Specific caption for the post
     """
     caption = Caption_generation(image_path, specific_caption)
+    print("Caption generated")
+    print(caption)
+    print("posting image...")
     client.photo_upload(path=image_path, caption=caption)
     os.remove(image_path) # TODO: instead of removing puting in database
     print(f"Posted and removed image: {image_path}")

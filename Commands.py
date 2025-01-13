@@ -27,14 +27,15 @@ def Command(client):
             print('get: get specific post and preview')
             Command(client)
         case "exit":
+            client.logout()
             exit()
         case "random":
             specific_caption = ''
-            post = Random_post(client)
+            post = Random_post()
         case "specific":
             image_name = input("image name:")
             specific_caption = input("caption (leave blank for no caption):")
-            post = Specific_post(client, image_name, specific_caption)
+            post = Specific_post(image_name)
         case "path":
             Commandpath()
             Command(client)
@@ -57,13 +58,10 @@ def Commandpath():
     match c_p:
         case 'help':
             print("List of commands")
-            print('exit: quit')
             print('esc: escape')
             print('show: show existing path')
             print('new: create new path')
             Commandpath()
-        case "exit":
-            exit()
         case "esc":
             return None
         case "show":

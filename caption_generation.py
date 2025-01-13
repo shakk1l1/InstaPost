@@ -8,5 +8,5 @@ def Caption_generation(image_path, specific_caption = ''):
     :return: caption
     """
     metadata = Get_Metadata(image_path)
-    caption = specific_caption + "\n" + metadata + "\nautomated post using Python"
+    caption = specific_caption + "\n" + metadata + "\nAutomated post"
     return caption
