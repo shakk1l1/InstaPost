@@ -1,8 +1,9 @@
 from os.path import commonpath
+from database import *
 
 from post import *
 
-def Command(client):
+def Command(client, login_status):
     """
     Handle user commands and return the image path and caption.
 
@@ -25,28 +26,50 @@ def Command(client):
             print('specific: post specific')
             print('path: path settings')
             print('get: get specific post and preview')
+            print('add: add image to database')
+            print('list: list all images in database')
             Command(client)
         case "exit":
-            client.logout()
+            try:
+                print("Logging out...")
+                client.logout()
+            except Exception as e:
+                print('User was not logged in')
             exit()
         case "random":
-            specific_caption = ''
-            post = Random_post()
+            if login_status:
+                specific_caption = ''
+                post = Random_post()
+            else:
+                print("Please login to use this command")
+                Command(client, login_status)
         case "specific":
-            image_name = input("image name:")
-            specific_caption = input("caption (leave blank for no caption):")
-            post = Specific_post(image_name)
+            if login_status:
+                image_name = input("image name:")
+                specific_caption = input("caption (leave blank for no caption):")
+                post = Specific_post(image_name)
+            else:
+                print("Please login to use this command")
+                Command(client, login_status)
         case "path":
             Commandpath()
-            Command(client)
+            Command(client, login_status)
         case "get":
             image_name = input("image name:")
             specific_caption = ''
             post, caption = Get(image_name)
+        case "add":
+            image_name = input("image name:")
+            insert_image(image_name)
+            print("Image added to database")
+            Command(client, login_status)
+        case "list":
+            list_images()
+            Command(client, login_status)
         case _:
             print("unknown command")
             print("use help for commands list")
-            Command(client)
+            Command(client, login_status)
     return post, specific_caption
 
 

@@ -2,6 +2,7 @@ import os
 from caption_generation import *
 from path import *
 import random
+from database import insert_image, check_image
 from PIL import Image
 
 def Specific_post(image_name):
@@ -47,8 +48,10 @@ def Post(image_path, client, specific_caption = ''):
     print(caption)
     print("posting image...")
     client.photo_upload(path=image_path, caption=caption)
-    os.remove(image_path) # TODO: instead of removing puting in database
-    print(f"Posted and removed image: {image_path}")
+    #os.remove(image_path)
+    #print(f"Posted and removed image: {image_path}")
+    insert_image(image_path)
+    print('Photo uploaded')
 
 def Get(image_name):
     """
