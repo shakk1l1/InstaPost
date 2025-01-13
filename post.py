@@ -48,8 +48,6 @@ def Post(image_path, client, specific_caption = ''):
     print(caption)
     print("posting image...")
     client.photo_upload(path=image_path, caption=caption)
-    #os.remove(image_path)
-    #print(f"Posted and removed image: {image_path}")
     insert_image(image_path)
     print('Photo uploaded')
 

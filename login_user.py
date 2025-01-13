@@ -28,5 +28,4 @@ def get_login_info():
     """
     login = input("Login: ")  # TODO: automatic login
     password = input("Password: ")
-    print('Client Connected')
     return login, password
