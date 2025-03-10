@@ -49,7 +49,6 @@ def Post(image_path, client, specific_caption = ''):
     print("posting image...")
     client.photo_upload(path=image_path, caption=caption)
     insert_image(image_path)
-    print('Photo uploaded')
 
 def Get(image_name):
     """
@@ -68,8 +67,29 @@ def Get(image_name):
         # Display the image
         img.show()
         print(caption)
+    elif image_name == "random":
+        images = os.listdir(path)
+        index = random.randint(0, len(images) - 1)
+        image_path = os.path.join(path, images[index])
+        print('photo chosen randomly')
+        print('photo chose:' + images[index])
+        caption = Caption_generation(image_path)
+        # Load an image
+        img = Image.open(image_path)
+        # Display the image
+        img.show()
+        print(caption)
     else:
         print('photo not found')
         image_path = 'image not found'
         caption = ''
+
+    # Ask the user if they want to add and delete the image
+    if input("Do you want to add and delete this image? (y/n) \t").lower() == "y":
+        print(f"Adding {image_path} to database...")
+        insert_image(image_path)
+        print("Image added to database")
+        print(f"Deleting {image_path}...")
+        os.remove(image_path)
+        print("Image deleted")
     return image_path, caption

@@ -1,46 +1,66 @@
+# database.py
 import sqlite3
+from sqlite3 import Connection
+from queue import Queue
 
-def create_connection():
-    conn = sqlite3.connect('images.db')
-    return conn
+class Database:
+    def __init__(self, db_name='images.db', pool_size=5):
+        self.db_name = db_name
+        self.pool = Queue(maxsize=pool_size)
+        for _ in range(pool_size):
+            self.pool.put(self._create_connection())
+
+    def _create_connection(self) -> Connection:
+        return sqlite3.connect(self.db_name)
+
+    def get_connection(self) -> Connection:
+        return self.pool.get()
+
+    def release_connection(self, conn: Connection):
+        self.pool.put(conn)
+
+    def execute(self, query, params=()):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        conn.commit()
+        self.release_connection(conn)
+
+    def fetchone(self, query, params=()):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        result = cursor.fetchone()
+        self.release_connection(conn)
+        return result
+
+    def fetchall(self, query, params=()):
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        result = cursor.fetchall()
+        self.release_connection(conn)
+        return result
+
+db = Database()
 
 def create_table():
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS posted_images (
-                        id INTEGER PRIMARY KEY,
-                        image_name TEXT NOT NULL UNIQUE
-                      )''')
-    conn.commit()
-    conn.close()
+    db.execute('''CREATE TABLE IF NOT EXISTS posted_images (
+                    id INTEGER PRIMARY KEY,
+                    image_name TEXT NOT NULL UNIQUE
+                  )''')
 
 def insert_image(image_path):
-    conn = create_connection()
-    cursor = conn.cursor()
-    if '/' in image_path:
-        image_name = image_path.split('/')[-1]
-    else:
-        image_name = image_path
-    cursor.execute('INSERT INTO posted_images (image_name) VALUES (?)', (image_name,))
-    conn.commit()
-    conn.close()
+    image_name = image_path.split('/')[-1]
+    db.execute('INSERT INTO posted_images (image_name) VALUES (?)', (image_name,))
 
 def check_image(image_path):
-    conn = create_connection()
-    cursor = conn.cursor()
     image_name = image_path.split('/')[-1]
-    cursor.execute('SELECT * FROM posted_images WHERE image_name = ?', (image_name,))
-    result = cursor.fetchone()
-    conn.close()
-    return result is not None
+    return db.fetchone('SELECT * FROM posted_images WHERE image_name = ?', (image_name,)) is not None
 
-def list_images():
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM posted_images')
-    rows = cursor.fetchall()
+def print_images():
+    rows = db.fetchall('SELECT * FROM posted_images')
     for row in rows:
         print(row)
-    conn.close()
 
 create_table()
